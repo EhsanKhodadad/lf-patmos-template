@@ -1,4 +1,4 @@
-APP?=ADASModel
+APP?=SimpleConnection
 FUNC?=_sinkreaction_function_0
 SRC_DIR=$(CURDIR)/src/static/patmos
 DEST_DIR=$(CURDIR)/src-gen/static/$(APP)
