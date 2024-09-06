@@ -1,5 +1,13 @@
-APP?=SimpleConnection
-FUNC?=_sinkreaction_function_0
+APP?=ADASModel
+
+ifeq ($(APP), SimpleConnection)
+	FUNC?=_sinkreaction_function_0 
+else ifeq ($(APP), ScheduleTest)
+	FUNC?=_sinkreaction_function_0
+else ifeq ($(APP), ADASModel)
+	FUNC?=_adasprocessorreaction_function_0
+endif
+
 SRC_DIR=$(CURDIR)/src/static/patmos
 DEST_DIR=$(CURDIR)/src-gen/static/$(APP)
 INCD_DIR=$(CURDIR)/include
@@ -11,7 +19,7 @@ export LF_WCET_FUNC:=$(FUNC)
 
 all: del gen copy comp lin sim wcet
 gen: 
-	lfc-dev src/static/$(APP).lf 
+	../../bin/lfc-dev src/static/$(APP).lf 
 copy:
 	cp $(SRC_DIR)/lf_patmos_support.h 	  $(DEST_DIR)/include/core/platform/
 	cp $(SRC_DIR)/platform.h              $(DEST_DIR)/include/core/
