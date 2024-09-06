@@ -21,14 +21,15 @@ CFLAGS := $(INCS) -DINITIAL_EVENT_QUEUE_SIZE=10 -DINITIAL_REACT_QUEUE_SIZE=10 -D
 CFLAGS += -DLF_SINGLE_THREADED=0 -DSCHEDULER=SCHED_STATIC
 SRC_FILES := _$(LF_MAIN_TARGET_LC)_main.c $(LF_MAIN_TARGET).c
 
-# simple connection or schedule test
-SRC_FILES += _sink.c _source.c static_schedule.c 
-
-#philosophers
-# SRC_FILES += _arbitrator.c _broadcast.c _benchmarkrunner.c _philosopher.c 
-
-#ADASModel
-# SRC_FILES += _adasprocessor.c _brakes.c _camera.c _dashboard.c _lidar.c static_schedule.c 
+ifeq ($(LF_MAIN_TARGET), SimpleConnection)
+	SRC_FILES += _sink.c _source.c static_schedule.c 
+else ifeq ($(LF_MAIN_TARGET), ScheduleTest)
+	SRC_FILES += _sink.c _source.c static_schedule.c 
+else ifeq ($(LF_MAIN_TARGET), Philosophers)
+	SRC_FILES += _arbitrator.c _broadcast.c _benchmarkrunner.c _philosopher.c 
+else ifeq ($(LF_MAIN_TARGET), ADASModel)
+	SRC_FILES += _adasprocessor.c _brakes.c _camera.c _dashboard.c _lidar.c static_schedule.c 
+endif
 
 SRC_FILES += lib/schedule.c core/reactor_common.c core/lf_token.c core/reactor.c core/tag.c core/environment.c 
 SRC_FILES += core/utils/util.c core/utils/vector.c  core/utils/circular_buffer.c

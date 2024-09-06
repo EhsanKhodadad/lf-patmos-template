@@ -1,39 +1,65 @@
 # LF with single-threaded static schedule  on Patmos processor
 To use LF on Patmos processor, we currently need to add a Makefile along with some other lf_patmos_support files into `src-gen` folder. For make this procedure easier and one-click, another Makefile that is beside this README.md file can be used, which have everything we need to use single-thread static-scheuduled LF on top of Patmos.
 
+# Choose a Directory
+
+You can either use an existing directory, create a new one, or use the `~` (home) directory to store the files. Then navigate to it.
+
+# Clone this Repository 
+
 Since Ligua Franca does not officialy support Patmos at the time of submitting this paper, we put necessary files along with this README on this repository. Thus you need to clone this repository first and then copy support files by hand from this repository to the main repository.
 ```
-cd ~
+cd path/to/your/directory
 git clone https://github.com/lf-lang/lf-patmos-template.git
 ```
 # Clone Lingua Franca repository and check out to the right branch
 In order to use the branch of Lingua Franca that uses static schedule in single threaded mode you need to execute the following command: 
 ```
-cd ~
+cd path/to/your/directory
 git clone https://github.com/lf-lang/lingua-franca.git
 cd lingua-franca
 git checkout static-schedule-single-thread
 ```
+
+# Clone reactor-c submodule
+```
+cd path/to/your/directory
+git submodule update --init core/src/main/resources/lib/c/reactor-c;
+```
+
 # Add Patmos support file
- Thus, please copy and the file and the folder in this temporary repository into the appropriate directories in `static-schedule-single-thread` branch by executing these two commands:
+ Copy the necessary files and folder in this temporary repository into the appropriate directories in by executing following commands:
 
 ```
-cd ~
+cd path/to/your/directory
 cp -r lf-patmos-template/patmos lingua-franca/test/C/src/static/patmos
 cp lf-patmos-template/Makefile lingua-franca/test/C/Makefile
+cp lf-patmos-template/ADASModel.lf lingua-franca/test/C/src/static/ADASModel.lf
+cp lf-patmos-template/SimpleConnection.lf lingua-franca/test/C/src/static/SimpleConnection.lf 
 ```
+# Remove a problematic line
+
+`nano core/src/main/resources/lib/c/reactor-c/core/threaded/scheduler_static.c`
+
+Then remove or comment out line 55 (`#include "semaphore.h"`)
 
 # Execute an LF program on the Patmos processor
-To execute LF program, first go to `test/C`:
+To execute LF program, first navigate to `test/C`:
 
 `cd test/C`
 
-The test programs for static scheduler are all located in `test/C/src/static` directory, but you can use them in `test\C` directory. To do so, choose one of them, for example, `ScheduleTest.lf`
-and put the name of this lf file (`ScheduleTest`) to the `APP` variable of the Makefile by executing the following make command:
+The test programs for static scheduler are all located in `test/C/src/static` directory, but you can use them in `test/C` directory. To do so, choose one of them, for example, `SingleConnection.lf` and put the name of this lf file (`SingleConnection`) to the `APP` variable of the Makefile by executing the following make command:
 
-`make APP=ScheduleTest`
+`make APP=SingleConnection`
 
-By executing the above command, the target code in the C language is genereted and the result is compiled using patmos compiler. Then the result elf file will be simulated by Pasim, and it is finally analyzed by the Platin
+By executing the above command, the target code in the C language is genereted and the result is compiled using patmos compiler. Then the result elf file will be simulated by Pasim, and it is finally analyzed by the Platin. 
+
+# Other options
+To specify which function should get analysed by Platin, you can add `FUNC` variable to the `make` command following by function name: 
+
+
+`make APP=SingleConnection FUNC=_sinkreaction_function_0`
+
 
 # Other targets
 You can also use other targets of the make command that follows: 
